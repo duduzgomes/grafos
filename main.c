@@ -4,11 +4,11 @@
 #include <conio.h>
 
 int matriz[100][100];
-int l=5, c=5;
-int visitado[10];
-int caminho[10];
-int caminho_encontrado[10][10];
-int custo[10];
+int l=6, c=6;
+int visitado[100];
+int caminho[100];
+int caminho_encontrado[100][100];
+int custo[100];
 int noInicial=0, noFinal=0;
 
     
@@ -106,14 +106,15 @@ int qtd=0;
 int soma=0;
 
 void adicionar_caminho(int caminho[]){
-    for(int i=0; i<=10; i++){
+    for(int i=0; i<=100; i++){
         caminho_encontrado[cont][i] = caminho[i];
     }
 }
 
 void imprimir_rota(){
+    printf("\nNumero de rotas: %d\n", qtd);
     for(int i=0;i< qtd; i++){
-        for(int j=0; j<10;j++){
+        for(int j=0; j<100;j++){
             if(caminho_encontrado[i][j] == noFinal){
                 printf("%d: ", caminho_encontrado[i][j]);
                 break;
@@ -162,8 +163,8 @@ int main(){
     noFinal = 5;
 
     criar_matriz();
-    matriz_exemplo();
-    // alimentar_automatico();
+    // matriz_exemplo();
+    alimentar_automatico();
     imprimir();
 
     pecorrer(noInicial,noFinal);
