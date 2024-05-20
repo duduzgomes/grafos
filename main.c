@@ -4,7 +4,7 @@
 #include <conio.h>
 
 int matriz[100][100];
-int l=0, c=0;
+int l=5, c=5;
 int visitado[10];
 int caminho[10];
 int caminho_encontrado[10][10];
@@ -23,11 +23,14 @@ void criar_matriz(){
 void alimentar_automatico(){
     for(int i=0;i<l;i++){
         for(int j=0;j<c;j++){
-            matriz[i][j] = rand()%20;
+            if(i==j){
+                matriz[i][j] = 0;
+            }else{
+                matriz[i][j] = rand()%20;
+            }
         }
     }
-    printf("Matriz alimentada randomicamente.");
-    getch();
+    
 }
 
 void imprimir(){
@@ -123,14 +126,11 @@ void imprimir_rota(){
 }
 
 int pecorrer(int no, int noFinal){
-    if(visitado[no] == 1){
-        return 0;
-    }
     if(no == noFinal){
         caminho[aux] = no;
         adicionar_caminho(caminho);
-        custo[qtd] = soma;
         caminho[aux] = 0;
+        custo[qtd] = soma;
         cont++;
         qtd++;
         return 0;
@@ -145,21 +145,26 @@ int pecorrer(int no, int noFinal){
             soma += matriz[no][i];
             pecorrer(i, noFinal);
             soma -= matriz[no][i];
+        }
+        if(i==c-1){
             visitado[no] = 0;
+            aux--;
+            caminho[aux] = 0;
         }
     }
-    caminho[aux] = 0;
-    aux--;
+   
     
     return 0;
 }
 
 int main(){
     noInicial =0;
-    noFinal = 3;
+    noFinal = 5;
 
     criar_matriz();
     matriz_exemplo();
+    // alimentar_automatico();
+    imprimir();
 
     pecorrer(noInicial,noFinal);
     imprimir_rota();
