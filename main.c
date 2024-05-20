@@ -4,29 +4,54 @@
 #include <conio.h>
 
 int matriz[100][100];
-int l=6, c=6;
+int l=0, c=0;
 int visitado[100];
 int caminho[100];
 int caminho_encontrado[100][100];
 int custo[100];
 int noInicial=0, noFinal=0;
 
-    
-void criar_matriz(){
+int cont=0;
+int aux=0;
+int qtd=0;
+int soma=0;
+
+int vert_inicial = 0;
+int vert_final = 0;
+
+void limpar_matriz(){
     for(int i=0;i<100;i++){
         for(int j=0;j<100;j++){
             matriz[i][j] = 0;  
         }
     }
 }
+    
+void criar_matriz(){
+    printf("Digite o numero de linhas: ");
+    scanf("%d", &l);
+    printf("Digite o numero de colunas: ");
+    scanf("%d", &c);
+
+    for(int i=0;i<l;i++){
+        for(int j=0;j<c;j++){
+            matriz[i][j] = 0;  
+        }
+    }
+
+    printf("matriz %d x %d criada", l ,c);
+    getch();
+}
 
 void alimentar_automatico(){
+    limpar_matriz();
+    criar_matriz();
     for(int i=0;i<l;i++){
         for(int j=0;j<c;j++){
             if(i==j){
                 matriz[i][j] = 0;
             }else{
-                matriz[i][j] = rand()%20;
+                matriz[i][j] = rand()%10;
             }
         }
     }
@@ -64,13 +89,6 @@ void imprimir(){
     getch();
 }
 
-void iniciar_matriz(){
-    printf("Digite o número de linhas: ");
-    scanf("%d", &l);
-    printf("Digite o número de colunas: ");
-    scanf("%d", &c);
-}
-
 void alimentar_matriz(){
     int linha, coluna, valor;
     printf("Digite a linha: ");
@@ -81,9 +99,14 @@ void alimentar_matriz(){
     scanf("%d", &valor);
 
     matriz[linha][coluna] = valor;
+
+    printf("valor %d inserido na linha: %d, coluna: %d",valor, linha, coluna);
+    getch();
 }
 
 void matriz_exemplo(){
+    limpar_matriz();
+    
     l=6;
     c=6;
 
@@ -98,12 +121,10 @@ void matriz_exemplo(){
     matriz[3][5] = 6; 
     matriz[4][1] = 2; 
 
-}
+    printf("matriz %d x %d criada e alimentada", l, c);
+    getch();
 
-int cont=0;
-int aux=0;
-int qtd=0;
-int soma=0;
+}
 
 void adicionar_caminho(int caminho[]){
     for(int i=0; i<=100; i++){
@@ -111,19 +132,21 @@ void adicionar_caminho(int caminho[]){
     }
 }
 
-void imprimir_rota(){
+void imprimir_rotas(){
     printf("\nNumero de rotas: %d\n", qtd);
-    for(int i=0;i< qtd; i++){
-        for(int j=0; j<100;j++){
-            if(caminho_encontrado[i][j] == noFinal){
+    for(int i=0;i < qtd; i++){
+        for(int j=0; j < 100;j++){
+            if(caminho_encontrado[i][j] == vert_final){
                 printf("%d: ", caminho_encontrado[i][j]);
                 break;
+            }else{
+                printf("%d > ", caminho_encontrado[i][j]);
             }
-            printf("%d > ", caminho_encontrado[i][j]);
         }
         printf(" Custo: %d", custo[i]);
         printf("\n");
     }
+    getch();
 }
 
 int pecorrer(int no, int noFinal){
@@ -153,23 +176,76 @@ int pecorrer(int no, int noFinal){
             caminho[aux] = 0;
         }
     }
-   
-    
     return 0;
 }
 
+void pegar_valor(){
+    printf("Digite o vertice inicial: \n");
+    scanf("%d", &vert_inicial);
+    printf("Digite o vertice final: ");
+    scanf("%d", &vert_final);
+}
+
+void limpar_dados(){
+    for(int i=0;i < qtd; i++){
+        for(int j=0; j < 100;j++){
+            caminho_encontrado[i][j] = 0;
+        }
+    }
+    for(int i=0;i<100;i++){
+        caminho[i] = 0;
+        visitado[i] = 0;
+        custo[i] = 0;
+    }
+    qtd = 0;
+    cont = 0;
+    aux = 0;
+    soma = 0;
+
+}
+
 int main(){
-    noInicial =0;
-    noFinal = 5;
 
-    criar_matriz();
-    // matriz_exemplo();
-    alimentar_automatico();
-    imprimir();
+    int op=0;
+    do  
+    {
+        system("cls");
+        printf("[1] Criar matriz \n");
+        printf("[2] Gerar matriz teste \n");
+        printf("[3] Gerar matriz aleatoria \n");
+        printf("[4] Imprimir matriz \n");
+        printf("[5] Alimentar matriz \n");
+        printf("[6] Percorrer matriz \n");
+        printf("[7] Sair \n");
 
-    pecorrer(noInicial,noFinal);
-    imprimir_rota();
+        scanf("%d", &op);
 
-    return 0;
-
+        switch (op){
+            case 1:
+                criar_matriz();
+                break;
+            case 2:
+                matriz_exemplo();
+                break;
+            case 3:
+                alimentar_automatico();
+                break;
+            case 4:
+                imprimir();
+                break;
+            case 5:
+                alimentar_matriz();
+                break;
+            case 6:
+                pegar_valor();
+                pecorrer(vert_inicial, vert_final);
+                imprimir_rotas();
+                limpar_dados();
+                break;
+            case 7:
+                break;
+            default:
+                break;
+        }
+    } while(op != 7);
 }
