@@ -19,6 +19,29 @@ int soma=0;
 int vert_inicial = 0;
 int vert_final = 0;
 
+int fatorial(int pos, int vert_disp){
+    int fatorial = 1;
+     
+    for(int i=1; i <= pos; i++){
+        fatorial *= vert_disp;
+        vert_disp--;
+    }
+    return fatorial;
+}
+
+void calcular_rotas(){
+    int vert_disp = l - 2;
+    long long int somatorio = 0;
+
+    for (int i = vert_disp; i >=1; i--){
+        somatorio += fatorial(i, vert_disp);
+    }
+    somatorio++;
+    printf("\nNumero maximo de rotas %lld ", somatorio);
+    getch();
+    
+}
+
 void limpar_matriz(){
     for(int i=0;i<100;i++){
         for(int j=0;j<100;j++){
@@ -46,6 +69,7 @@ void criar_matriz(){
 void alimentar_automatico(){
     limpar_matriz();
     criar_matriz();
+
     for(int i=0;i<l;i++){
         for(int j=0;j<c;j++){
             if(i==j){
@@ -55,7 +79,6 @@ void alimentar_automatico(){
             }
         }
     }
-    
 }
 
 void imprimir(){
@@ -215,8 +238,9 @@ int main(){
         printf("[3] Gerar matriz aleatoria \n");
         printf("[4] Imprimir matriz \n");
         printf("[5] Alimentar matriz \n");
-        printf("[6] Percorrer matriz \n");
-        printf("[7] Sair \n");
+        printf("[6] Número maximo de rotas \n");
+        printf("[7] Percorrer matriz \n");
+        printf("[8] Sair \n");
 
         scanf("%d", &op);
 
@@ -237,15 +261,19 @@ int main(){
                 alimentar_matriz();
                 break;
             case 6:
+                calcular_rotas();
+                break;
+            case 7:
                 pegar_valor();
                 pecorrer(vert_inicial, vert_final);
                 imprimir_rotas();
                 limpar_dados();
                 break;
-            case 7:
+            case 8:
                 break;
             default:
                 break;
         }
-    } while(op != 7);
+    } while(op != 8);
+    alimentar_automatico();
 }
