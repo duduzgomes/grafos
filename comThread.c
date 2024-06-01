@@ -218,18 +218,14 @@ void* percorrer(void* arg){
 
     if(src == dst){
         Vetor* v = novo_caminho(caminho, src);
-        pthread_mutex_lock(&mutex);
         imprimir_rotas(v);
-        pthread_mutex_unlock(&mutex);
-        free(params);   
         pthread_exit( NULL );
         return NULL;
     }
 
     Vetor* novoCaminho = novo_caminho(caminho, src);
 
-    pthread_t threads[tamanho];
-    int count = 0;
+    pthread_t threads;
 
     for (int i = 0; i < tamanho; i++){
         if(matriz[src][i] != 0 && naoEstaNoVetor(novoCaminho, i)){
@@ -237,19 +233,16 @@ void* percorrer(void* arg){
             param->src = i;
             param->dst = dst;
             param->caminho = novoCaminho;
-            pthread_create(&threads[count++], NULL, percorrer, param);
+            pthread_create(&threads, NULL, percorrer, param);
+            pthread_detach(threads);
         }
     }
-    for(int i=0; i < count; i++){
-        pthread_join(threads[i], NULL);
-    }
-    free(params);
     return NULL;
 }
 
 
 void pegar_valor(){
-    printf("Digite o vertice inicial: \n");
+    printf("Digite o vertice inicial: ");
     scanf("%d", &src);
     printf("Digite o vertice final: ");
     scanf("%d", &dst);
@@ -292,10 +285,10 @@ int main(){
                 pthread_t thread;
                 Args params = {src, dst, NULL};
                 pthread_create(&thread, NULL, percorrer, &params);
-                pthread_join(thread, NULL);
+                pthread_detach(thread);
                 clock_t fim = clock();
-                double temp = (double)(fim - inicio ) / CLOCKS_PER_SEC * 1000;
-                printf("\nTempo de execucao: %.2f ms", temp);
+                double temp = (double)(fim - inicio ) / CLOCKS_PER_SEC;
+                printf("\nTempo de execucao: %f ms \n", temp);
                 getch();
                 break;
             default:
